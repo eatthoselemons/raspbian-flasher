@@ -64,7 +64,7 @@ update_config=1
 network={
 ssid="$wifiName"
 psk="$password"
-}" > ~/raspbian-script/wifi
+}" > $PWD/raspbian-script/wifi
 
 echo "Do you want ssh?"
 read $sshAnswer
@@ -77,18 +77,18 @@ else
   let ssh=1
 fi
 
-if [[ -f ~/raspbian-script/raspbian-latest.zip ]];
+if [[ -f $PWD/raspbian-script/raspbian-latest.zip ]];
 then
   echo "Raspbian is already downloaded"
 else
-  if [[ -d ~/raspbian-script ]];
+  if [[ -d $PWD/raspbian-script ]];
   then
     echo "Rasbian directory already exists"
   else
-    mkdir ~/raspbian-script
+    mkdir $PWD/raspbian-script
   fi
   echo "Downloading Raspbian"
-  cd ~/raspbian-script
+  cd $PWD/raspbian-script
   wget --output-file=raspbian-latest.zip 'https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-09-30/2019-09-26-raspbian-buster-lite.zip' 
 fi
 
@@ -98,7 +98,7 @@ then
   balena=1
 else
   echo "downloading balena etcher"
-  cd ~/raspbian-script
+  cd $PWD/raspbian-script
   wget --output-file=balena-cli.zip 'https://github.com/balena-io/balena-cli/releases/download/v11.17.3/balena-cli-v11.17.3-linux-x64-standalone.zip' > /dev/stdout
   unzip balena-cli.zip
   balena=0
@@ -140,9 +140,9 @@ then
 
   if [[ $balena = 1 ]]
   then
-    sudo balena local flash ~/raspbian-script/raspbian_latest.zip --drive /dev/$disk > /dev/stdout
+    sudo balena local flash $PWD/raspbian-script/raspbian_latest.zip --drive /dev/$disk > /dev/stdout
   else
-    sudo ~/raspbian-script/balena-cli/balena local flash ~/raspbian-script/raspbian-latest.zip --drive /dev/$disk > /dev/stdout
+    sudo $PWD/raspbian-script/balena-cli/balena local flash $PWD/raspbian-script/raspbian-latest.zip --drive /dev/$disk > /dev/stdout
   fi
   tput setaf 2; echo :fox: "SD Card flashed and verified succesfully."
 fi
@@ -174,7 +174,7 @@ then
   if [[ wifi = 1 ]]
   then
     echo "adding wifi"
-    sudo cp ~/raspbian-script/wifi /mnt/raspbian/etc/wpa_supplicant/wpa_supplicant.conf
+    sudo cp $PWD/raspbian-script/wifi /mnt/raspbian/etc/wpa_supplicant/wpa_supplicant.conf
     sudo umount /mnt/raspbian
   fi
 fi
@@ -192,10 +192,10 @@ then
   sudo touch /dev/diskBootPartition/ssh
   if [[ wifi = 1 ]]
   then
-    sudo cp ~/raspbian-script/wifi /dev/diskUserParition/etc/wpa_supplicant/wpa_supplicant.conf
+    sudo cp $PWD/raspbian-script/wifi /dev/diskUserParition/etc/wpa_supplicant/wpa_supplicant.conf
   fi
 fi
 
-rm ~/raspbian-script/wifi
+rm $PWD/raspbian-script/wifi
 
 echo "finished"
