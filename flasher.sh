@@ -66,6 +66,17 @@ ssid="$wifiName"
 psk="$password"
 }" > ~/raspbian-script/wifi
 
+echo "Do you want ssh?"
+read $sshAnswer
+
+if [[ "$sshAnswer" =~ ^([nN][oO]|[nN])+.*$ ]]
+then
+  let ssh=0
+  echo "no ssh"
+else
+  let ssh=1
+fi
+
 if [[ -f ~/raspbian-script/raspbian-latest.zip ]];
 then
   echo "Raspbian is already downloaded"
@@ -154,7 +165,10 @@ then
   fi
   sudo mount /dev/$diskBootPartition /mnt/raspbian
   echo "adding ssh"
-  sudo touch /mnt/raspbian/ssh
+  if [[ ssh = 1 ]]
+  then
+    sudo touch /mnt/raspbian/ssh
+  fi
   sudo umount /mnt/raspbian
   sudo mount /dev/$diskUserPartition /mnt/raspbian
   if [[ wifi = 1 ]]
